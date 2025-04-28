@@ -2,11 +2,46 @@
 import React from "react";
 import NavBar from "../components/NavBar";
 import StatusCard from "../components/StatusCard";
-import PowerChart from "../components/PowerChart";
-import RevenueChart from "../components/RevenueChart";
-import SystemSchema from "../components/SystemSchema";
-import DeviceInfo from "../components/DeviceInfo";
-import EnvironmentalBenefits from "../components/EnvironmentalBenefits";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Battery, Cloud, Sun, Check, AlertTriangle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+
+// Mock data for plants - in a real app, this would come from an API
+const plants = [
+  {
+    id: 1,
+    name: "Usina Solar Alpha",
+    location: "São Paulo, SP",
+    status: "operational",
+    energyGenerated: "1,245.8",
+    efficiency: "94%",
+  },
+  {
+    id: 2,
+    name: "Usina Solar Beta",
+    location: "Rio de Janeiro, RJ",
+    status: "maintenance",
+    energyGenerated: "876.3",
+    efficiency: "82%",
+  },
+  {
+    id: 3,
+    name: "Usina Solar Gamma",
+    location: "Belo Horizonte, MG",
+    status: "operational",
+    energyGenerated: "1,562.1",
+    efficiency: "97%",
+  },
+  {
+    id: 4,
+    name: "Usina Solar Delta",
+    location: "Brasília, DF",
+    status: "alert",
+    energyGenerated: "450.7",
+    efficiency: "65%",
+  },
+];
 
 const Index = () => {
   return (
@@ -16,62 +51,92 @@ const Index = () => {
       <div className="flex-1 p-4 overflow-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <StatusCard 
-            title="Rendimento hoje" 
-            value="0.00" 
-            unit="kWh" 
-            icon={
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                <path d="M13 2v7h7"></path>
-                <path d="m9.5 12.5 1.5 2 3-4"></path>
-              </svg>
-            }
+            title="Total de Usinas" 
+            value={plants.length.toString()} 
+            unit="unidades" 
+            icon={<Sun />}
           />
           
           <StatusCard 
-            title="Receita hoje" 
-            value="0.00" 
-            unit="¥" 
-            icon={
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 6v12"></path>
-                <path d="M8 10h8"></path>
-                <path d="M8 14h8"></path>
-              </svg>
-            }
+            title="Energia Total Gerada Hoje" 
+            value="4,134.9" 
+            unit="kWh" 
+            icon={<Battery />}
           />
           
           <StatusCard 
-            title="Energia carregada no ESS hoje" 
-            value="676.10" 
-            unit="kWh" 
-            icon={
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M7 19h10"></path>
-                <path d="M7 5h10"></path>
-                <path d="M5 19a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2"></path>
-                <path d="M19 19a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2"></path>
-                <path d="M9 16v-6"></path>
-                <path d="M9 10h3"></path>
-                <path d="M13 8v3"></path>
-                <path d="M13 14v-3h3"></path>
-              </svg>
-            }
+            title="Economia de CO₂ Hoje" 
+            value="2.8" 
+            unit="toneladas" 
+            icon={<Cloud />}
           />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <PowerChart />
-          <RevenueChart />
-        </div>
+        <Card className="mb-4">
+          <CardHeader>
+            <CardTitle>Minhas Usinas Solares</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>Localização</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Energia Gerada Hoje (kWh)</TableHead>
+                  <TableHead>Eficiência</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {plants.map((plant) => (
+                  <TableRow key={plant.id}>
+                    <TableCell>
+                      <Link 
+                        to={`/plant-details?id=${plant.id}`} 
+                        className="text-primary hover:underline flex items-center"
+                      >
+                        {plant.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{plant.location}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center">
+                        {plant.status === 'operational' ? (
+                          <><Check className="mr-1 h-4 w-4 text-green-500" /> Operacional</>
+                        ) : plant.status === 'maintenance' ? (
+                          <><AlertTriangle className="mr-1 h-4 w-4 text-yellow-500" /> Em Manutenção</>
+                        ) : (
+                          <><AlertTriangle className="mr-1 h-4 w-4 text-red-500" /> Alerta</>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>{plant.energyGenerated}</TableCell>
+                    <TableCell>{plant.efficiency}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          <SystemSchema />
-          <div className="grid grid-cols-1 gap-4">
-            <DeviceInfo />
-            <EnvironmentalBenefits />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Visão Geral de Performance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Gráfico de performance por usina será exibido aqui.</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Alertas Recentes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Alertas recentes serão exibidos aqui.</p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
