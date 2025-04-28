@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import PlantDetails from "./pages/PlantDetails";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Layout from "./components/Layout";
 
 const queryClient = new QueryClient();
 
@@ -18,10 +19,23 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/plant-details" element={<PlantDetails />} />
           <Route path="/login" element={<Login />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route 
+            path="/" 
+            element={
+              <Layout>
+                <Index />
+              </Layout>
+            } 
+          />
+          <Route 
+            path="/plant-details" 
+            element={
+              <Layout>
+                <PlantDetails />
+              </Layout>
+            } 
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
