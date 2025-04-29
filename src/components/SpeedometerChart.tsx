@@ -69,7 +69,8 @@ const SpeedometerChart = ({ value = 75, title = "Potência Instantânea", size =
                 <Label
                   content={({ viewBox }) => {
                     if (!viewBox) return null;
-                    const { cx, cy } = viewBox;
+                    // TypeScript fix: Explicitly cast viewBox to access properties
+                    const { cx, cy } = viewBox as { cx: number; cy: number };
                     return (
                       <g>
                         <text

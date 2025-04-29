@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavBar from "./NavBar";
 import {
   Sidebar,
@@ -16,7 +16,7 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, FileText, Bell, Settings } from "lucide-react";
+import { LayoutDashboard, FileText, Bell, Settings, SolarPanel } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -24,12 +24,18 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     {
       title: "Dashboard",
       icon: LayoutDashboard,
       url: "/",
+    },
+    {
+      title: "Usinas",
+      icon: SolarPanel,
+      url: "/plants",
     },
     {
       title: "Relatórios",
@@ -67,6 +73,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                       <SidebarMenuButton 
                         onClick={() => navigate(item.url)}
                         tooltip={item.title}
+                        isActive={location.pathname === item.url}
                       >
                         <item.icon className="size-4" />
                         <span>{item.title}</span>

@@ -9,6 +9,10 @@ import PlantDetails from "./pages/PlantDetails";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Layout from "./components/Layout";
+import Plants from "./pages/Plants";
+import Reports from "./pages/Reports";
+import Alerts from "./pages/Alerts";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -26,13 +30,45 @@ const App = () => (
               <Layout>
                 <Index />
               </Layout>
-            } 
+            }
           />
           <Route 
             path="/plant-details" 
             element={
               <Layout>
                 <PlantDetails />
+              </Layout>
+            } 
+          />
+          <Route 
+            path="/plants" 
+            element={
+              <Layout>
+                <Plants />
+              </Layout>
+            } 
+          />
+          <Route 
+            path="/reports" 
+            element={
+              <Layout>
+                <Reports />
+              </Layout>
+            } 
+          />
+          <Route 
+            path="/alerts" 
+            element={
+              <Layout>
+                <Alerts />
+              </Layout>
+            } 
+          />
+          <Route 
+            path="/settings" 
+            element={
+              <Layout>
+                <Settings />
               </Layout>
             } 
           />

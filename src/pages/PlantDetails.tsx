@@ -1,11 +1,26 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Download, Calendar } from "lucide-react";
+import { ArrowLeft, Download, Calendar, BarChart2, LineChart as LineChartIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import SpeedometerChart from "@/components/SpeedometerChart";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const generateDailyData = () => {
   const data = [];
@@ -19,10 +34,64 @@ const generateDailyData = () => {
   return data;
 };
 
+const generateMonthlyData = () => {
+  const data = [];
+  for (let i = 1; i <= 12; i++) {
+    data.push({
+      month: i,
+      value: Math.round(Math.random() * 3000 + 10000)
+    });
+  }
+  return data;
+};
+
+const generateYearlyData = () => {
+  const data = [];
+  const currentYear = new Date().getFullYear();
+  for (let i = currentYear - 5; i <= currentYear; i++) {
+    data.push({
+      year: i,
+      value: Math.round(Math.random() * 40000 + 120000)
+    });
+  }
+  return data;
+};
+
 const PlantDetails = () => {
   const navigate = useNavigate();
-  const data = generateDailyData();
-  const currentPowerValue = Math.floor(Math.random() * 100); // Random value between 0-100
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [viewMode, setViewMode] = useState<"day" | "month" | "year">("day");
+  const [currentPowerValue] = useState(Math.floor(Math.random() * 100)); // Random value between 0-100
+  
+  // Data for different time periods
+  const dailyData = generateDailyData();
+  const monthlyData = generateMonthlyData();
+  const yearlyData = generateYearlyData();
+  
+  // Select the correct data based on viewMode
+  const chartData = viewMode === "day" 
+    ? dailyData 
+    : viewMode === "month" 
+      ? monthlyData 
+      : yearlyData;
+  
+  // Get the correct label for X axis
+  const getXAxisLabel = () => {
+    switch(viewMode) {
+      case "day": return "Dia do mês";
+      case "month": return "Mês";
+      case "year": return "Ano";
+    }
+  };
+  
+  // Get the correct dataKey for X axis
+  const getXAxisDataKey = () => {
+    switch(viewMode) {
+      case "day": return "day";
+      case "month": return "month";
+      case "year": return "year";
+    }
+  };
 
   return (
     <div className="flex flex-col">
@@ -34,16 +103,44 @@ const PlantDetails = () => {
           <h1 className="text-xl font-bold">Detalhes da Usina Solar</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Calendar size={16} className="mr-2" />
-            Filtrar por data
-          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Calendar size={16} className="mr-2" />
+                {date ? format(date, "dd/MM/yyyy") : "Filtrar por data"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <CalendarComponent
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
           <Button variant="outline" size="sm">
             <Download size={16} className="mr-2" />
             Exportar dados
           </Button>
         </div>
       </div>
+      
+      {/* System status at the top */}
+      <Card className="mb-4">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full bg-green-500"></div>
+              <span className="text-lg font-medium">Sistema operando normalmente</span>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Atualizado em: {format(new Date(), "dd/MM/yyyy HH:mm")}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <Card>
@@ -80,21 +177,50 @@ const PlantDetails = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
         <div className="lg:col-span-2">
           <Card className="mb-4 lg:mb-0">
-            <CardHeader>
-              <CardTitle>Produção diária (kWh) - Maio 2023</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>
+                {viewMode === "day" 
+                  ? "Produção diária (kWh) - Maio 2023" 
+                  : viewMode === "month" 
+                    ? "Produção mensal (kWh) - 2023" 
+                    : "Produção anual (kWh) - 2018-2023"}
+              </CardTitle>
+              <div className="flex space-x-2">
+                <Button 
+                  variant={viewMode === "day" ? "default" : "outline"} 
+                  size="sm" 
+                  onClick={() => setViewMode("day")}
+                >
+                  <BarChart2 size={16} className="mr-1" /> Dia
+                </Button>
+                <Button 
+                  variant={viewMode === "month" ? "default" : "outline"} 
+                  size="sm" 
+                  onClick={() => setViewMode("month")}
+                >
+                  <BarChart2 size={16} className="mr-1" /> Mês
+                </Button>
+                <Button 
+                  variant={viewMode === "year" ? "default" : "outline"} 
+                  size="sm" 
+                  onClick={() => setViewMode("year")}
+                >
+                  <LineChartIcon size={16} className="mr-1" /> Ano
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={data}
+                    data={chartData}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                     <XAxis 
-                      dataKey="day" 
+                      dataKey={getXAxisDataKey()} 
                       tick={{ fill: '#999', fontSize: 12 }}
-                      label={{ value: 'Dia do mês', position: 'insideBottomRight', offset: -10, fill: '#999' }} 
+                      label={{ value: getXAxisLabel(), position: 'insideBottomRight', offset: -10, fill: '#999' }} 
                     />
                     <YAxis 
                       tick={{ fill: '#999', fontSize: 12 }}
@@ -153,11 +279,6 @@ const PlantDetails = () => {
             <CardTitle>Estado atual do sistema</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center mb-4">
-              <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-              <span>Sistema operando normalmente</span>
-            </div>
-            
             <div className="space-y-3">
               <div>
                 <div className="flex justify-between mb-1">
