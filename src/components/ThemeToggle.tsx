@@ -4,7 +4,7 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const ThemeToggle = () => {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">("dark"); // Default to dark theme
 
   // On mount, read the theme from localStorage or default to system preference
   useEffect(() => {
@@ -14,6 +14,8 @@ export const ThemeToggle = () => {
       setTheme(storedTheme);
     } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       setTheme("dark");
+    } else {
+      setTheme("light");
     }
   }, []);
 
