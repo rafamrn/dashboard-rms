@@ -8,7 +8,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Cell
 } from "recharts";
 
 interface PlantEfficiency {
@@ -29,10 +30,17 @@ const EfficiencyBarChart = ({ data }: EfficiencyBarChartProps) => {
       item.efficiency
   }));
 
+  // Color scheme based on efficiency values
+  const getBarColor = (efficiency: number) => {
+    if (efficiency >= 90) return '#10b981'; // Verde para alta eficiência
+    if (efficiency >= 70) return '#ff5704'; // Cor secundária para média eficiência
+    return '#ef4444'; // Vermelho para baixa eficiência
+  };
+
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Eficiência das Usinas (%)</CardTitle>
+    <Card className="w-full card-gradient card-hover">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-bold text-primary">Eficiência das Usinas (%)</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[300px] w-full">
@@ -46,21 +54,37 @@ const EfficiencyBarChart = ({ data }: EfficiencyBarChartProps) => {
                 bottom: 70,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(14, 53, 74, 0.15)" />
               <XAxis 
                 dataKey="name" 
-                tick={{ fill: '#999', fontSize: 12 }}
+                tick={{ fill: '#666', fontSize: 12 }}
                 angle={-45}
                 textAnchor="end"
                 height={70}
               />
               <YAxis 
-                tick={{ fill: '#999', fontSize: 12 }}
+                tick={{ fill: '#666', fontSize: 12 }}
                 domain={[0, 100]}
-                label={{ value: 'Eficiência (%)', angle: -90, position: 'insideLeft', fill: '#999' }} 
+                label={{ value: 'Eficiência (%)', angle: -90, position: 'insideLeft', fill: '#666' }} 
               />
-              <Tooltip />
-              <Bar dataKey="efficiency" fill="#10b981" radius={[4, 4, 0, 0]} />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  borderColor: '#0e354a',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                }}
+                formatter={(value: number) => [`${value}%`, 'Eficiência']}
+              />
+              <Bar 
+                dataKey="efficiency" 
+                radius={[6, 6, 0, 0]}
+                animationDuration={1500}
+              >
+                {processedData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={getBarColor(entry.efficiency as number)} />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>

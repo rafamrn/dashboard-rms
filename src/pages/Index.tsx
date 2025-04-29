@@ -49,9 +49,27 @@ const Index = () => {
     efficiency: parseFloat(plant.efficiency)
   }));
 
+  const getStatusColor = (status: string) => {
+    switch(status) {
+      case 'operational': return 'text-green-500';
+      case 'maintenance': return 'text-amber-500';
+      case 'alert': return 'text-red-500';
+      default: return 'text-gray-500';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch(status) {
+      case 'operational': return 'Operacional';
+      case 'maintenance': return 'Em Manutenção';
+      case 'alert': return 'Alerta';
+      default: return 'Desconhecido';
+    }
+  };
+
   return (
     <div className="flex flex-col w-full">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <StatusCard 
           title="Total de Usinas" 
           value={plants.length.toString()} 
@@ -74,15 +92,15 @@ const Index = () => {
         />
       </div>
       
-      <Card className="mb-4">
-        <CardHeader>
-          <CardTitle>Minhas Usinas Solares</CardTitle>
+      <Card className="mb-6 card-gradient card-hover overflow-hidden">
+        <CardHeader className="bg-primary/5 pb-2">
+          <CardTitle className="text-lg font-bold text-primary">Minhas Usinas Solares</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
+                <TableRow className="border-b border-primary/20">
                   <TableHead>Nome</TableHead>
                   <TableHead className="hidden md:table-cell">Localização</TableHead>
                   <TableHead>Status</TableHead>
@@ -92,11 +110,11 @@ const Index = () => {
               </TableHeader>
               <TableBody>
                 {plants.map((plant) => (
-                  <TableRow key={plant.id}>
+                  <TableRow key={plant.id} className="hover:bg-primary/5 transition-colors">
                     <TableCell>
                       <Link 
                         to={`/plant-details?id=${plant.id}`} 
-                        className="text-primary hover:underline flex items-center"
+                        className="text-primary hover:text-accent flex items-center font-medium"
                       >
                         {plant.name}
                       </Link>
@@ -105,16 +123,26 @@ const Index = () => {
                     <TableCell>
                       <div className="flex items-center">
                         {plant.status === 'operational' ? (
-                          <><Check className="mr-1 h-4 w-4 text-green-500" /> <span className="hidden xs:inline">Operacional</span></>
+                          <><Check className={`mr-1 h-4 w-4 ${getStatusColor(plant.status)}`} /> <span className={`hidden xs:inline ${getStatusColor(plant.status)}`}>{getStatusText(plant.status)}</span></>
                         ) : plant.status === 'maintenance' ? (
-                          <><AlertTriangle className="mr-1 h-4 w-4 text-yellow-500" /> <span className="hidden xs:inline">Em Manutenção</span></>
+                          <><AlertTriangle className={`mr-1 h-4 w-4 ${getStatusColor(plant.status)}`} /> <span className={`hidden xs:inline ${getStatusColor(plant.status)}`}>{getStatusText(plant.status)}</span></>
                         ) : (
-                          <><AlertTriangle className="mr-1 h-4 w-4 text-red-500" /> <span className="hidden xs:inline">Alerta</span></>
+                          <><AlertTriangle className={`mr-1 h-4 w-4 ${getStatusColor(plant.status)}`} /> <span className={`hidden xs:inline ${getStatusColor(plant.status)}`}>{getStatusText(plant.status)}</span></>
                         )}
                       </div>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">{plant.energyGenerated}</TableCell>
-                    <TableCell className="hidden lg:table-cell">{plant.efficiency}%</TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <div className="flex items-center">
+                        <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                          <div 
+                            className={`h-2 rounded-full ${parseFloat(plant.efficiency) >= 90 ? 'bg-green-500' : parseFloat(plant.efficiency) >= 70 ? 'bg-accent' : 'bg-red-500'}`} 
+                            style={{ width: `${plant.efficiency}%` }}
+                          ></div>
+                        </div>
+                        <span>{plant.efficiency}%</span>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -126,9 +154,9 @@ const Index = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <EfficiencyBarChart data={efficiencyData} />
         
-        <Card>
-          <CardHeader>
-            <CardTitle>Alertas Recentes</CardTitle>
+        <Card className="card-gradient card-hover">
+          <CardHeader className="bg-primary/5 pb-2">
+            <CardTitle className="text-lg font-bold text-primary">Alertas Recentes</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">Alertas recentes serão exibidos aqui.</p>

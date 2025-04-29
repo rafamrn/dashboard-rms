@@ -6,24 +6,24 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --foreground: 207 67% 17%;
     
     --card: 0 0% 98%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 207 67% 17%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 207 67% 17%;
     
-    --primary: 196 100% 40%;
+    --primary: 207 67% 17%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 16 100% 51%;
+    --secondary-foreground: 0 0% 100%;
     
     --muted: 220 14% 96%;
     --muted-foreground: 240 5% 50%;
     
-    --accent: 196 100% 40%;
+    --accent: 16 100% 51%;
     --accent-foreground: 0 0% 100%;
     
     --destructive: 0 85% 60%;
@@ -31,31 +31,31 @@
     
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 196 100% 40%;
+    --ring: 207 67% 17%;
     
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222 47% 11%;
+    --background: 207 67% 8%;
     --foreground: 0 0% 98%;
 
-    --card: 222 47% 14%;
+    --card: 207 67% 12%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 222 47% 11%;
+    --popover: 207 67% 8%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 196 100% 50%;
+    --primary: 207 67% 17%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 240 4% 16%;
+    --secondary: 16 100% 51%;
     --secondary-foreground: 0 0% 98%;
 
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 196 100% 40%;
+    --accent: 16 100% 51%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -63,7 +63,7 @@
 
     --border: 240 3.7% 20%;
     --input: 240 3.7% 15.9%;
-    --ring: 196 100% 50%;
+    --ring: 207 67% 17%;
   }
 }
 
@@ -74,5 +74,15 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer components {
+  .card-gradient {
+    @apply bg-gradient-to-br from-card to-secondary/5 backdrop-blur-sm;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10;
   }
 }
