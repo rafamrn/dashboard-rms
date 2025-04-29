@@ -16,7 +16,7 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, FileText, Bell, Settings, SolarPanel } from "lucide-react";
+import { LayoutDashboard, FileText, Bell, Settings, Battery } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -34,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     },
     {
       title: "Usinas",
-      icon: SolarPanel,
+      icon: Battery,
       url: "/plants",
     },
     {

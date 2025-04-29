@@ -13,7 +13,7 @@ import {
 
 interface PlantEfficiency {
   name: string;
-  efficiency: number;
+  efficiency: number | string;
 }
 
 interface EfficiencyBarChartProps {
@@ -25,7 +25,7 @@ const EfficiencyBarChart = ({ data }: EfficiencyBarChartProps) => {
   const processedData = data.map(item => ({
     name: item.name,
     efficiency: typeof item.efficiency === 'string' ? 
-      parseFloat(item.efficiency.replace('%', '')) : 
+      parseFloat(item.efficiency.toString().replace('%', '')) : 
       item.efficiency
   }));
 
