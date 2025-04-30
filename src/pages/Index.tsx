@@ -121,7 +121,7 @@ const Index = () => {
         </CardContent>
       </Card>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 py-0 px-0 mx-0">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 py-0 mx-0 px-[2px]">
         <EfficiencyBarChart data={efficiencyData} />
         
         <Card className="card-gradient card-hover py-0 my-0 mx-0 px-[34px]">
