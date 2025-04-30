@@ -1,19 +1,15 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, Maximize, Minimize } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
 const NavBar = () => {
   const navigate = useNavigate();
   const [isFullScreen, setIsFullScreen] = useState(false);
-
   const handleSettingsClick = () => {
     navigate("/settings");
   };
-
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().then(() => {
@@ -31,21 +27,14 @@ const NavBar = () => {
       }
     }
   };
-
-  return (
-    <div className="flex items-center justify-between w-full px-4 py-2 bg-background border-b border-border">
+  return <div className="flex items-center justify-between w-full px-4 py-2 bg-background border-b border-border">
       <div className="flex items-center gap-2">
         <div className="font-bold text-xl text-primary">FusionSolar</div>
       </div>
 
       <div className="flex-grow flex justify-center">
         <Tabs defaultValue="visao-geral">
-          <TabsList className="bg-secondary">
-            <TabsTrigger value="visao-geral">Visão geral</TabsTrigger>
-            <TabsTrigger value="pv">PV</TabsTrigger>
-            <TabsTrigger value="ess">ESS</TabsTrigger>
-            <TabsTrigger value="carregador">Carregador</TabsTrigger>
-          </TabsList>
+          
         </Tabs>
       </div>
 
@@ -62,8 +51,6 @@ const NavBar = () => {
           {isFullScreen ? <Minimize size={18} /> : <Maximize size={18} />}
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default NavBar;
