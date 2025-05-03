@@ -5,6 +5,7 @@ import { Battery, Cloud, Sun, Check, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import EfficiencyBarChart from "@/components/EfficiencyBarChart";
+import PlantsStatusSummary from "@/components/PlantsStatusSummary";
 
 // Mock data for plants - in a real app, this would come from an API
 const plants = [{
@@ -72,6 +73,10 @@ const Index = () => {
         <StatusCard title="Energia Total Gerada Hoje" value="4,134.9" unit="kWh" icon={<Battery />} />
         
         <StatusCard title="Economia de CO₂ Hoje" value="2.8" unit="toneladas" icon={<Cloud />} />
+      </div>
+      
+      <div className="mb-6">
+        <PlantsStatusSummary plants={plants} />
       </div>
       
       <Card className="mb-6 card-gradient card-hover overflow-hidden">
